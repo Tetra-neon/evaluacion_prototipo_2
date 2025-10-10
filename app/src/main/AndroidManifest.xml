@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.devst.app">
+
+    <!-- Permiso para la camara y tambien flash-->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.flash"
+        android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.App">
+
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.App.Starting">  <!-- PASO CLAVE 1: Aplicar tema del splash -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false">
+            <!-- El intent-filter de LAUNCHER ha sido MOVIDO a SplashActivity -->
+        </activity>
+
+        <!-- Activity Principal (Home) -->
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false"
+            android:label="Inicio" />
+        <!-- Activity de Perfil -->
+        <activity
+            android:name=".PerfilActivity"
+            android:exported="false"
+            android:label="Mi Perfil" />
+
+        <activity
+            android:name=".EditarPerfilActivity"
+            android:exported="false"
+            android:label="Editar Perfil"
+            android:parentActivityName=".PerfilActivity" />
+
+        <!-- Activity de la Cámara el .CamaraActivity se debe declarar en el Layout  -->
+        <activity
+            android:name=".CamaraActivity"
+            android:exported="false" />
+
+    </application>
+
+</manifest>

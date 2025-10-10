@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 1. TEMA PRINCIPAL DE LA APLICACIÓN -->
+    <style name="Theme.App" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Colores de Marca y Acento -->
+        <item name="colorPrimary">@color/brand_primary_purple</item>
+        <item name="colorSecondary">@color/brand_secondary_blue</item>
+        <item name="colorAccent">@color/brand_accent_pink</item>
+
+        <!-- Colores de la Interfaz (Fondo y Superficies) -->
+        <item name="android:colorBackground">@color/ui_background</item>
+        <item name="colorSurface">@color/ui_surface</item>
+
+        <!-- Colores de Texto (para asegurar la legibilidad) -->
+        <item name="colorOnPrimary">@color/text_on_primary</item> <!-- Texto sobre el morado -->
+        <item name="colorOnSecondary">@color/white</item> <!-- Texto sobre el azul -->
+        <item name="colorOnBackground">@color/text_primary</item> <!-- Texto sobre el fondo general -->
+        <item name="colorOnSurface">@color/text_primary</item> <!-- Texto sobre las tarjetas -->
+        <item name="android:textColorSecondary">@color/text_secondary</item> <!-- Color para hints -->
+    </style>
+
+
+    <!-- 2. TEMA DE LA SPLASH SCREEN -->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <!-- Fondo blanco para la splash. -->
+        <item name="windowSplashScreenBackground">@color/white</item>
+
+        <!-- El logo que se mostrará -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/icononubi</item>
+
+        <!-- Tema al que se transiciona después del splash -->
+        <item name="postSplashScreenTheme">@style/Theme.App</item>
+    </style>
+
+</resources>
