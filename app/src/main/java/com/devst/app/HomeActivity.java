@@ -174,16 +174,15 @@ public class HomeActivity extends AppCompatActivity {
 
         // Evento ir a la Ayuda con Intent EXPLÍCITO
         btnAyuda.setOnClickListener(v -> {
-            // Creamos un Intent explícito porque sabemos exactamente a qué Activity queremos ir.
             Intent intentAyuda = new Intent(HomeActivity.this, AyudaActivity.class);
             startActivity(intentAyuda); // Iniciamos la AyudaActivity
         });
 
         //Evento ir a la configuración con Intent EXPLÍCITO
         btnConfiguracion.setOnClickListener(v -> {
-            // Creamos un Intent explícito porque sabemos exactamente a qué Activity queremos ir.
             Intent intentConfig = new Intent(HomeActivity.this, ConfigActivity.class);
-            startActivity(intentConfig); // Iniciamos la AyudaActivity
+            startActivity(intentConfig);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
     }
