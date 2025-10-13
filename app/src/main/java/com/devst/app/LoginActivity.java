@@ -14,16 +14,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.splashscreen.SplashScreen;
 
 public class LoginActivity extends AppCompatActivity {
     // --- 1. VISTAS ---
     // (Se mantienen como variables de instancia porque se usan en onCreate() y en IntentoInicioSesion())
     private EditText edtEmail;
     private EditText edtPass;
-    //private Button btnLogin; //revisar esto dentro del oneCreate
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this); //EdgeToEdge es para diseños de pantalla completa en Android, lo puedo quitar
         setContentView(R.layout.activity_login);
