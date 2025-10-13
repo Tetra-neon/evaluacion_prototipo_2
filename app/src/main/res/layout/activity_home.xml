@@ -163,6 +163,30 @@
                             android:paddingStart="16dp"
                             android:paddingEnd="16dp"
                             style="@style/Widget.MaterialComponents.Button.TextButton"/>
+
+                        <Button
+                            android:id="@+id/btnLlamar"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:drawableStart="@android:drawable/ic_menu_call"
+                            android:drawablePadding="12dp"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="Llamar"
+                            android:textAlignment="textStart" />
+
+                        <Button
+                            android:id="@+id/btnEnviarSms"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:drawableStart="@android:drawable/ic_dialog_email"
+                            android:drawablePadding="12dp"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="Enviar SMS de Ayuda"
+                            android:textAlignment="textStart" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -215,6 +239,18 @@
                             android:paddingStart="16dp"
                             android:paddingEnd="16dp"
                             style="@style/Widget.MaterialComponents.Button.TextButton"/>
+
+                        <Button
+                            android:id="@+id/btnAyuda"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:text="Ayuda y FAQ"
+                            android:drawableStart="@android:drawable/ic_menu_help"
+                            android:drawablePadding="12dp"
+                            android:textAlignment="textStart"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 

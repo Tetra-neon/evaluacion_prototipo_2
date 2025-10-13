@@ -14,7 +14,11 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.content.ContentValues;
+import android.provider.MediaStore;
+import androidx.activity.ComponentActivity;
+import androidx.activity.OnBackPressedCallback;
+import android.os.Environment;
 
 import androidx.activity.EdgeToEdge;
 
@@ -33,6 +37,17 @@ public class HomeActivity extends AppCompatActivity {
     private CameraManager camara;
     private String cameraID= null;
     private boolean luz = false;
+    private Uri fotoUriParaCamara;
+
+    private final ActivityResultLauncher<Uri> tomarFotoLauncher =
+            registerForActivityResult(new ActivityResultContracts.TakePicture(), success -> {
+                if (success) {
+                    // El "success" confirma que la cámara guardó la foto en la URI que le pasamos.
+                    Toast.makeText(this, "Foto guardada en la Galería.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Captura de foto cancelada.", Toast.LENGTH_SHORT).show();
+                }
+            });
 
     //Launcher para activity y flash-camara
     private final ActivityResultLauncher<Intent> editarPerfilLauncher =
@@ -67,6 +82,9 @@ public class HomeActivity extends AppCompatActivity {
         Button btnEnviarCorreo = findViewById(R.id.btnEnviarCorreo);
         Button btnCompartir = findViewById(R.id.btnCompartir);
         Button btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
+        Button btnLlamar = findViewById(R.id.btnLlamar);
+        Button btnEnviarSms = findViewById(R.id.btnEnviarSms);
+        Button btnAyuda = findViewById(R.id.btnAyuda);
 
         // 2. Recibir datos del Intent
         emailUsuario = getIntent().getStringExtra("email_usuario");
@@ -79,23 +97,34 @@ public class HomeActivity extends AppCompatActivity {
 
         // 4. Configurar todos los listeners de los botones
         //Evento ir a la camara Intent EXPLÍCITO
-        btnCamara.setOnClickListener(v -> { //No tenia la accion de mi boton camara la creo aqui
+        btnCamara.setOnClickListener(v -> {
             if (cameraID != null && luz) {
-                try {
-                    camara.setTorchMode(cameraID, false);
-                } catch (CameraAccessException ignore) {
-                } // apaga la linterna si estaba encendida (evita conflictos con la cámara)
-                luz = false;
-                btnLinterna.setText("Encender Linterna");
+                alternarluz();
             }
-            startActivity(new Intent(this, CamaraActivity.class));
+            // 1. Crear el nombre y los valores para la nueva imagen en la galería.
+            String nombreArchivo = "IMG_" + System.currentTimeMillis() + ".jpg";
+
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.DISPLAY_NAME, nombreArchivo);
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+            // Le decimos que la guarde en el directorio público de Imágenes.
+            values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+
+            // 2. Crear la URI vacía en la galería pública.
+            fotoUriParaCamara = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+            if (fotoUriParaCamara != null) { // 3. Lanzar la cámara, pasándole la URI donde debe guardar la foto.
+                tomarFotoLauncher.launch(fotoUriParaCamara);
+            } else {
+                Toast.makeText(this, "No se pudo crear el archivo de imagen.", Toast.LENGTH_SHORT).show();
+            }
         });
 
         //Evento ir al perfil Intent EXPLÍCITO
         btnIrPerfil.setOnClickListener(view -> { // Configurar botón "Ir a Perfil"
             Intent intentPerfil = new Intent(HomeActivity.this, PerfilActivity.class); // Intent explícito: le decimos exactamente a qué Activity ir - POlimorfismo
             intentPerfil.putExtra("email_usuario", emailUsuario); // Le pasamos el email usando putExtra
-            editarPerfilLauncher.launch(intentPerfil);  // Iniciamos la Activity, el profe lo llama solo perfil
+            editarPerfilLauncher.launch(intentPerfil);  // Iniciamos la Activity
         });
 
         //Evento abrir web con Intent IMPLÍCITO
@@ -124,6 +153,28 @@ public class HomeActivity extends AppCompatActivity {
 
         //Evento cerrar sesión con Intent IMPLÍCITO
         btnCerrarSesion.setOnClickListener(v -> cerrarSesion());
+
+        //Evento llamar con Intent IMPLÍCITO
+        btnLlamar.setOnClickListener(view -> { // Configurar botón "Llamar"
+            Intent intentLlamar = new Intent(Intent.ACTION_DIAL); // Intent implícito para llamar
+            startActivity(intentLlamar); // Iniciamos la Activity
+        });
+
+        // Evento Enviar SMS con Intent IMPLÍCITO
+        btnEnviarSms.setOnClickListener(view -> { // Configurar botón "Enviar SMS"
+            String numeroSms = "";
+            String textoMensaje = "Hola, necesito ayuda con la aplicación.";
+            Intent intentSms = new Intent(Intent.ACTION_SENDTO,  Uri.parse("smsto:" + numeroSms)); // Intent implícito para enviar SMS
+            intentSms.putExtra("sms_body", textoMensaje);
+            startActivity(intentSms);
+        });
+
+        // Evento ir a la Ayuda con Intent EXPLÍCITO
+        btnAyuda.setOnClickListener(v -> {
+            // Creamos un Intent explícito porque sabemos exactamente a qué Activity queremos ir.
+            Intent intentAyuda = new Intent(HomeActivity.this, AyudaActivity.class);
+            startActivity(intentAyuda); // Iniciamos la AyudaActivity
+        });
     }
         //Linterna Cámara
         /*Creamos la estructura para el flash principalmente

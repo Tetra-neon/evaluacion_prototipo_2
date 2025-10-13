@@ -35,15 +35,12 @@
         <activity
             android:name=".LoginActivity"
             android:exported="false">
-            <!-- El intent-filter de LAUNCHER ha sido MOVIDO a SplashActivity -->
         </activity>
 
-        <!-- Activity Principal (Home) -->
         <activity
             android:name=".HomeActivity"
             android:exported="false"
             android:label="Inicio" />
-        <!-- Activity de Perfil -->
         <activity
             android:name=".PerfilActivity"
             android:exported="false"
@@ -55,10 +52,23 @@
             android:label="Editar Perfil"
             android:parentActivityName=".PerfilActivity" />
 
-        <!-- Activity de la Cámara el .CamaraActivity se debe declarar en el Layout  -->
         <activity
             android:name=".CamaraActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".AyudaActivity"
+            android:exported="false" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.devst.app.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
     </application>
 
