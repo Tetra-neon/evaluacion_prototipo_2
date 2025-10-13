@@ -73,6 +73,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home); //Este es el XML donde estan los botones
+
         // 1. Inicializar todas las vistas
         tvBienvenida = findViewById(R.id.tvBienvenida);
         btnLinterna = findViewById(R.id.btnLinterna); //Botones de la linterna y la camara
@@ -85,6 +86,8 @@ public class HomeActivity extends AppCompatActivity {
         Button btnLlamar = findViewById(R.id.btnLlamar);
         Button btnEnviarSms = findViewById(R.id.btnEnviarSms);
         Button btnAyuda = findViewById(R.id.btnAyuda);
+        Button btnConfiguracion = findViewById(R.id.btnConfiguracion);
+
 
         // 2. Recibir datos del Intent
         emailUsuario = getIntent().getStringExtra("email_usuario");
@@ -94,8 +97,8 @@ public class HomeActivity extends AppCompatActivity {
         // 3. Lógica de la cámara/linterna
         inicializarCamara();
 
-
         // 4. Configurar todos los listeners de los botones
+
         //Evento ir a la camara Intent EXPLÍCITO
         btnCamara.setOnClickListener(v -> {
             if (cameraID != null && luz) {
@@ -141,7 +144,7 @@ public class HomeActivity extends AppCompatActivity {
             intentEmail.putExtra(Intent.EXTRA_SUBJECT, "Asunto de Android");
             intentEmail.putExtra(Intent.EXTRA_TEXT, "Mensaje del cuerpo(contenido)");
             startActivity(Intent.createChooser(intentEmail, "Enviar Correo con:"));
-        }); //Modificado sin la validacion para que sea como la del profe
+        });
 
         //Evento compartir texto con Intent IMPLÍCITO
         btnCompartir.setOnClickListener(view -> { // Configurar botón "Compartir"
@@ -175,10 +178,15 @@ public class HomeActivity extends AppCompatActivity {
             Intent intentAyuda = new Intent(HomeActivity.this, AyudaActivity.class);
             startActivity(intentAyuda); // Iniciamos la AyudaActivity
         });
+
+        //Evento ir a la configuración con Intent EXPLÍCITO
+        btnConfiguracion.setOnClickListener(v -> {
+            // Creamos un Intent explícito porque sabemos exactamente a qué Activity queremos ir.
+            Intent intentConfig = new Intent(HomeActivity.this, ConfigActivity.class);
+            startActivity(intentConfig); // Iniciamos la AyudaActivity
+        });
+
     }
-        //Linterna Cámara
-        /*Creamos la estructura para el flash principalmente
-         * y el inicio de la camara, agregando try-catch*/
         //Logica de linterna
     private void inicializarCamara() {
         camara = (CameraManager) getSystemService(CAMERA_SERVICE);
@@ -197,7 +205,6 @@ public class HomeActivity extends AppCompatActivity {
         }catch (CameraAccessException e){
             Toast.makeText(this, "No se puede acceder a la camara", Toast.LENGTH_SHORT).show();
         }
-
         btnLinterna.setOnClickListener(v -> {
             if(cameraID == null){
                 Toast.makeText(this, "El dispositivo no tiene Flash disponible", Toast.LENGTH_SHORT).show();
