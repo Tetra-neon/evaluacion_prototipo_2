@@ -25,18 +25,16 @@
         <activity
             android:name=".SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.App.Starting">  <!-- PASO CLAVE 1: Aplicar tema del splash -->
+            android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".LoginActivity"
             android:exported="false">
         </activity>
-
         <activity
             android:name=".HomeActivity"
             android:exported="false"
@@ -45,21 +43,20 @@
             android:name=".PerfilActivity"
             android:exported="false"
             android:label="Mi Perfil" />
-
         <activity
             android:name=".EditarPerfilActivity"
             android:exported="false"
             android:label="Editar Perfil"
             android:parentActivityName=".PerfilActivity" />
-
         <activity
             android:name=".CamaraActivity"
             android:exported="false" />
-
         <activity
             android:name=".AyudaActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".ConfigActivity"
+            android:exported="false" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.devst.app.fileprovider"
