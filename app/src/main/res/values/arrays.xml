@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tipos_contacto">
+        <item>Felicitaciones</item>
+        <item>Reclamo</item>
+        <item>Sugerencia</item>
+        <item>Solicitud de Ayuda</item>
+    </string-array>
+</resources>
