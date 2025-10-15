@@ -47,4 +47,6 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("androidx.core:core-splashscreen:1.0.1")
+    // DEPENDENCIA REQUERIDA PARA UBICACIÓN
+    implementation("com.google.android.gms:play-services-location:21.2.0")
 }
