@@ -1,33 +1,36 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- 1. TEMA PRINCIPAL DE LA APLICACIÓN -->
-    <style name="Theme.App" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Colores de Marca y Acento -->
-        <item name="colorPrimary">@color/brand_primary_purple</item>
-        <item name="colorSecondary">@color/brand_secondary_blue</item>
-        <item name="colorAccent">@color/brand_accent_pink</item>
+    <!-- =========================================== -->
+    <!-- 1. TEMA PRINCIPAL DE LA APP (BASE PARA AMBOS MODOS) -->
+    <!-- =========================================== -->
+    <style name="Theme.App" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Colores Primarios (elementos interactivos principales) -->
+        <item name="colorPrimary">@color/md_theme_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
 
-        <!-- Colores de la Interfaz (Fondo y Superficies) -->
-        <item name="android:colorBackground">@color/ui_background</item>
-        <item name="colorSurface">@color/ui_surface</item>
+        <!-- Colores Secundarios (elementos flotantes, switches) -->
+        <item name="colorSecondary">@color/md_theme_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_onSecondary</item>
 
-        <!-- Colores de Texto (para asegurar la legibilidad) -->
-        <item name="colorOnPrimary">@color/text_on_primary</item> <!-- Texto sobre el morado -->
-        <item name="colorOnSecondary">@color/white</item> <!-- Texto sobre el azul -->
-        <item name="colorOnBackground">@color/text_primary</item> <!-- Texto sobre el fondo general -->
-        <item name="colorOnSurface">@color/text_primary</item> <!-- Texto sobre las tarjetas -->
-        <item name="android:textColorSecondary">@color/text_secondary</item> <!-- Color para hints -->
+        <!-- Colores de Fondo y Superficies -->
+        <item name="android:colorBackground">@color/md_theme_background</item>
+        <item name="colorSurface">@color/md_theme_surface</item>
+        <item name="colorOnBackground">@color/md_theme_onBackground</item>
+        <item name="colorOnSurface">@color/md_theme_onSurface</item>
+
+        <!-- Color de la barra de estado (la barra superior con la hora y la batería) -->
+        <item name="android:statusBarColor">@color/md_theme_background</item>
     </style>
 
-
+    <!-- =========================================== -->
     <!-- 2. TEMA DE LA SPLASH SCREEN -->
+    <!-- =========================================== -->
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
-        <!-- Fondo blanco para la splash. -->
-        <item name="windowSplashScreenBackground">@color/white</item>
+        <!-- Fondo de la splash screen -->
+        <item name="windowSplashScreenBackground">@color/md_theme_background</item>
 
-        <!-- El logo que se mostrará -->
-        <item name="windowSplashScreenAnimatedIcon">@drawable/icononubi</item>
+        <!-- Icono de la splash screen (lo toma de tu drawable) -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/iconopatita</item> <!-- Cambia esto si tienes otro icono -->
 
         <!-- Tema al que se transiciona después del splash -->
         <item name="postSplashScreenTheme">@style/Theme.App</item>

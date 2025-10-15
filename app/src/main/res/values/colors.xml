@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- === PALETA BASE === -->
-    <color name="white">#FFFFFFFF</color>
+    <!-- Paleta de Colores Base -->
     <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
 
-    <!-- === COLORES DE MARCA (Branding) === -->
-    <!-- Morado Principal: para botones, cabeceras y elementos clave. -->
-    <color name="brand_primary_purple">#551A8B</color>
-    <!-- Azul Secundario: para íconos activos, switches o elementos de apoyo. -->
-    <color name="brand_secondary_blue">#2EBEF9</color>
-    <!-- Rosado de Acento: para notificaciones, Floating Action Buttons o elementos a resaltar. -->
-    <color name="brand_accent_pink">#DF7DBA</color>
+    <!-- ========= TU NUEVA PALETA DE MARCA ========= -->
+    <color name="md_theme_primary">#D32F2F</color> <!-- Rojo Intenso -->
+    <color name="md_theme_onPrimary">#FFFFFF</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    <color name="md_theme_secondary">#FFC107</color> <!-- Amarillo Ámbar -->
+    <color name="md_theme_onSecondary">#000000</color>
+    <color name="md_theme_background">#121212</color>
+    <color name="ui_background">@color/md_theme_background</color>
+    <color name="md_theme_onBackground">#E0E0E0</color>
+    <color name="md_theme_surface">#1E1E1E</color>
+    <color name="md_theme_onSurface">#FFFFFF</color>
+    <color name="md_theme_error">#B00020</color>
+    <color name="md_theme_onError">#FFFFFF</color>
+    <color name="text_primary">#FFFFFF</color>
 
-    <!-- === COLORES DE INTERFAZ (UI) === -->
-    <!-- Fondo principal de la app (un blanco muy suave y limpio). -->
-    <color name="ui_background">#F8F9FA</color>
-    <!-- Color para "superficies" como tarjetas o diálogos (blanco puro). -->
-    <color name="ui_surface">#FFFFFFFF</color>
-    <!-- Color para divisores o bordes sutiles. -->
-    <color name="ui_divider">#EAEBEE</color>
+    <!-- ======================================================== -->
+    <!-- ALIAS PARA SOLUCIONAR ERRORES DE COMPILACIÓN (COLORES ANTIGUOS) -->
+    <!-- ======================================================== -->
+    <color name="brand_primary_purple">@color/md_theme_primary</color>
+    <color name="brand_accent_pink">@color/md_theme_secondary</color>
+    <color name="ui_surface">@color/md_theme_surface</color>
+    <color name="ui_divider">@color/text_primary</color>
+    <color name="text_secondary">@color/text_primary</color>
 
-    <!-- === COLORES DE TEXTO === -->
-    <!-- Negro principal para títulos y textos importantes. -->
-    <color name="text_primary">#1D1D1F</color>
-    <!-- Gris oscuro para textos secundarios, descripciones o hints. -->
-    <color name="text_secondary">#6E6E73</color>
-    <!-- Color para el texto que va SOBRE un fondo de color primario (ej. texto en un botón morado). -->
-    <color name="text_on_primary">#FFFFFFFF</color>
 </resources>
