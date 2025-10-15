@@ -1,8 +1,10 @@
 <resources>
-    <string name="app_name">Nubi</string>
-
-    <string name="nombre_app">MiApp</string>
-    <string name="login_titulo">Bienvenido</string>
+    <string name="app_name">SOSPet</string>
+    <!-- =========================================== -->
+    <!--     Textos para el login       -->
+    <!-- =========================================== -->
+    <string name="nombre_app">SOSPet</string>
+    <string name="login_titulo">Bienvenido a SOSPet</string>
     <string name="login_subtitulo"> </string>
     <string name="email_hint">Correo electrónico</string>
     <string name="password_hint">Contraseña</string>
@@ -19,5 +21,6 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-    <string name="url_terminos_de_uso">https://developer.android.com/studio/terms</string>
+
+    <string name="url_terminos_de_uso">https://pethappy.cl/policies/privacy-policy</string>
 </resources>
