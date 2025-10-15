@@ -15,11 +15,13 @@
 
         <!-- Toolbar con un botón de regreso integrado -->
         <com.google.android.material.appbar.MaterialToolbar
+            android:minHeight="?attr/actionBarSize"
+            android:paddingTop="24dp"
             android:id="@+id/toolbarAyuda"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_arrow_back"
-            app:title="Guía y Soporte" />
+            app:title="🐾 Guía y Soporte - SOS Wild" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -68,14 +70,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="¿Cómo uso la linterna?"
+                            android:text="¿Qué hacer si encuentro un animal en peligro de extinción en una zona urbana?"
                             android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
                     </LinearLayout>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Presiona el botón 'Encender Linterna'. Si es la primera vez, la app te pedirá permiso para usar la cámara."
+                        android:text="👉 No lo toques ni te acerques, solo observa desde lejos."
                         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                         android:textColor="?android:attr/textColorSecondary" />
                 </LinearLayout>
@@ -107,14 +109,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="¿Cómo tomo una foto?"
+                            android:text="¿Cómo envío una alerta SOS?"
                             android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
                     </LinearLayout>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Presiona 'Tomar Foto'. La cámara de tu teléfono se abrirá. Al aceptar, la foto se guardará automáticamente en tu galería."
+                        android:text="📍 Presiona “Ver mi ubicación”. Copia las cordenadas y envialas por el medio de contacto de tu preferencia el centro de rescate se pondrá en contacto."
                         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                         android:textColor="?android:attr/textColorSecondary" />
                 </LinearLayout>
@@ -146,14 +148,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="¿Cómo edito mi perfil?"
+                            android:text="¿Cómo editar mis datos personales?"
                             android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
                     </LinearLayout>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Ve a 'Ir a Perfil' para ver tus datos. Presiona el botón de editar para cambiar tu nombre de usuario."
+                        android:text="🔧 Ve a “Mi Perfil”. Podrás editar tus datos, tu nombre, tu email, tu carnet."
                         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                         android:textColor="?android:attr/textColorSecondary" />
                 </LinearLayout>
@@ -188,7 +190,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Envíanos un mensaje y te responderemos."
+                        android:text="Tu mensaje puede salvar una vida 💚"
                         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                         android:textColor="?android:attr/textColorSecondary"
                         android:layout_marginBottom="16dp"/>
