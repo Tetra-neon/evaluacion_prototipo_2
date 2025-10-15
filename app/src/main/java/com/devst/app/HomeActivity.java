@@ -1,84 +1,126 @@
 package com.devst.app;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.appcompat.app.AlertDialog;
-
-import android.view.ViewTreeObserver;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.content.ContentValues;
-import android.provider.MediaStore;
-import androidx.activity.ComponentActivity;
-import androidx.activity.OnBackPressedCallback;
-import android.os.Environment;
 
 import androidx.activity.EdgeToEdge;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.PackageManagerCompat;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 
 public class HomeActivity extends AppCompatActivity {
 
-    //variables
-    private String emailUsuario; // Variable para guardar el email recibido
-    private TextView tvBienvenida; // TextView para mostrar el mensaje de bienvenida
+    // ✅ CORRECCIÓN: Todas las variables que se usan en varios métodos se declaran aquí arriba.
+    private TextView tvBienvenida;
     private Button btnLinterna;
-    private CameraManager camara;
-    private String cameraID= null;
-    private boolean luz = false;
+    private String emailUsuario;
     private Uri fotoUriParaCamara;
 
-    private final ActivityResultLauncher<Uri> tomarFotoLauncher =
-            registerForActivityResult(new ActivityResultContracts.TakePicture(), success -> {
-                if (success) {
-                    // El "success" confirma que la cámara guardó la foto en la URI que le pasamos.
-                    Toast.makeText(this, "Foto guardada en la Galería.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Captura de foto cancelada.", Toast.LENGTH_SHORT).show();
-                }
-            });
+    // Variables para la cámara/linterna
+    private CameraManager camara;
+    private String cameraID;
+    private boolean luz = false;
 
-    //Launcher para activity y flash-camara
-    private final ActivityResultLauncher<Intent> editarPerfilLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->{
-                if(result.getResultCode() == RESULT_OK && result.getData()!= null){
-                    String nombre = result.getData().getStringExtra("nombre_editado");
-                    if(nombre != null){
-                        tvBienvenida.setText("Hola, "+ nombre);
+    // Variables para la ubicación
+    private FusedLocationProviderClient fusedLocationClient;
+    private ActivityResultLauncher<String> requestPermissionLauncher;
+
+    // --- Launchers para resultados de otras Activities ---
+
+    private final ActivityResultLauncher<Uri> tomarFotoLauncher =
+            registerForActivityResult(new ActivityResultContracts.TakePicture(), exito -> {
+                if (exito) {
+                    Toast.makeText(this, "Foto guardada en la galería", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (fotoUriParaCamara != null) {
+                        getContentResolver().delete(fotoUriParaCamara, null, null);
                     }
                 }
             });
-    private final ActivityResultLauncher<String> permisosCamaraLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), obtener ->{
-                if(obtener){
-                    alternarluz(); //Metodo Apagar y encender Luz
-                }else {
-                    Toast.makeText(this, "Permiso de camara denegado!", Toast.LENGTH_SHORT).show();
+
+    private final ActivityResultLauncher<Intent> editarPerfilLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    String nombre = result.getData().getStringExtra("nombre_editado");
+                    if (nombre != null) {
+                        tvBienvenida.setText("Hola, " + nombre);
+                    }
                 }
             });
+
+    private final ActivityResultLauncher<String> permisosCamaraLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), obtener -> {
+                if (obtener) {
+                    alternarluz();
+                } else {
+                    Toast.makeText(this, "Permiso de cámara denegado.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_home); //Este es el XML donde estan los botones
+        setContentView(R.layout.activity_home);
 
-        // 1. Inicializar todas las vistas
+        // --- 1. Inicialización de Servicios y Launchers ---
+        inicializarServiciosDeUbicacion();
+        inicializarVistas(); // ✅ CORRECCIÓN: Llamamos a un método para inicializar todas las vistas
+        inicializarCamara();
+        configurarListeners(); // ✅ CORRECCIÓN: Llamamos a un método para configurar todos los listeners
+
+        // --- 2. Lógica Inicial ---
+        emailUsuario = getIntent().getStringExtra("email_usuario");
+        if (emailUsuario == null) emailUsuario = "";
+        tvBienvenida.setText("Hola: " + emailUsuario);
+    }
+
+    private void inicializarVistas() {
         tvBienvenida = findViewById(R.id.tvBienvenida);
-        btnLinterna = findViewById(R.id.btnLinterna); //Botones de la linterna y la camara
-        Button btnCamara = findViewById(R.id.btnCamara); // Declarada como variable local
-        Button btnIrPerfil = findViewById(R.id.btnIrPerfil); // Conectar los botones del layout
+        btnLinterna = findViewById(R.id.btnLinterna);
+        // El resto de los botones se inicializan y usan solo dentro de configurarListeners()
+    }
+
+    private void inicializarServiciosDeUbicacion() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        // ✅ CORRECCIÓN: Se inicializa el launcher de permisos de ubicación UNA SOLA VEZ.
+        requestPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (isGranted) {
+                        Toast.makeText(this, "Permiso concedido. Intenta de nuevo.", Toast.LENGTH_SHORT).show();
+                        obtenerUbicacionYAbrirMapa();
+                    } else {
+                        Toast.makeText(this, "Permiso denegado. No se puede mostrar la ubicación.", Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
+    }
+
+    private void configurarListeners() {
+        // ✅ CORRECCIÓN: Todos los listeners juntos en un solo método.
+        Button btnCamara = findViewById(R.id.btnCamara);
+        Button btnIrPerfil = findViewById(R.id.btnIrPerfil);
         Button btnAbrirWeb = findViewById(R.id.btnAbrirWeb);
         Button btnEnviarCorreo = findViewById(R.id.btnEnviarCorreo);
         Button btnCompartir = findViewById(R.id.btnCompartir);
@@ -87,161 +129,174 @@ public class HomeActivity extends AppCompatActivity {
         Button btnEnviarSms = findViewById(R.id.btnEnviarSms);
         Button btnAyuda = findViewById(R.id.btnAyuda);
         Button btnConfiguracion = findViewById(R.id.btnConfiguracion);
+        Button btnAbrirMapa = findViewById(R.id.btnAbrirMapa);
 
+        btnAbrirMapa.setOnClickListener(v -> verificarPermisosYAbrirMapa());
 
-        // 2. Recibir datos del Intent
-        emailUsuario = getIntent().getStringExtra("email_usuario");
-        if (emailUsuario == null) emailUsuario = "";
-        tvBienvenida.setText("Bienvenido: " + emailUsuario);
-
-        // 3. Lógica de la cámara/linterna
-        inicializarCamara();
-
-        // 4. Configurar todos los listeners de los botones
-
-        //Evento ir a la camara Intent EXPLÍCITO
         btnCamara.setOnClickListener(v -> {
-            if (cameraID != null && luz) {
-                alternarluz();
-            }
-            // 1. Crear el nombre y los valores para la nueva imagen en la galería.
+            if (cameraID != null && luz) alternarluz();
             String nombreArchivo = "IMG_" + System.currentTimeMillis() + ".jpg";
-
             ContentValues values = new ContentValues();
             values.put(MediaStore.Images.Media.DISPLAY_NAME, nombreArchivo);
             values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-            // Le decimos que la guarde en el directorio público de Imágenes.
             values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
-
-            // 2. Crear la URI vacía en la galería pública.
             fotoUriParaCamara = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-            if (fotoUriParaCamara != null) { // 3. Lanzar la cámara, pasándole la URI donde debe guardar la foto.
+            if (fotoUriParaCamara != null) {
                 tomarFotoLauncher.launch(fotoUriParaCamara);
             } else {
                 Toast.makeText(this, "No se pudo crear el archivo de imagen.", Toast.LENGTH_SHORT).show();
             }
         });
 
-        //Evento ir al perfil Intent EXPLÍCITO
-        btnIrPerfil.setOnClickListener(view -> { // Configurar botón "Ir a Perfil"
-            Intent intentPerfil = new Intent(HomeActivity.this, PerfilActivity.class); // Intent explícito: le decimos exactamente a qué Activity ir - POlimorfismo
-            intentPerfil.putExtra("email_usuario", emailUsuario); // Le pasamos el email usando putExtra
-            editarPerfilLauncher.launch(intentPerfil);  // Iniciamos la Activity
+        btnIrPerfil.setOnClickListener(view -> {
+            Intent intentPerfil = new Intent(HomeActivity.this, PerfilActivity.class);
+            intentPerfil.putExtra("email_usuario", emailUsuario);
+            editarPerfilLauncher.launch(intentPerfil);
         });
 
-        //Evento abrir web con Intent IMPLÍCITO
-        btnAbrirWeb.setOnClickListener(view -> { // Configurar botón "Abrir Web"
-            Uri url = Uri.parse("http://www.santotomas.cl");
+        btnAbrirWeb.setOnClickListener(view -> {
+            Uri url = Uri.parse("https://sospetrescue.org/");
             Intent intentWeb = new Intent(Intent.ACTION_VIEW, url);
-            startActivity(intentWeb); //el profe lo llama viewWeb
+            startActivity(intentWeb);
         });
-        // Evento Enviar Correo con Intent IMPLÍCITO
-        btnEnviarCorreo.setOnClickListener(view -> { // Configurar botón "Enviar Correo"
-            Intent intentEmail = new Intent(Intent.ACTION_SENDTO); // Intent implícito para enviar email el profe lo llama solo email
-            intentEmail.setData(Uri.parse("mailto:")); // Solo apps de email por ahora jeje
+
+        btnEnviarCorreo.setOnClickListener(view -> {
+            Intent intentEmail = new Intent(Intent.ACTION_SENDTO);
+            intentEmail.setData(Uri.parse("mailto:"));
             intentEmail.putExtra(Intent.EXTRA_EMAIL, new String[]{emailUsuario});
-            intentEmail.putExtra(Intent.EXTRA_SUBJECT, "Asunto de Android");
-            intentEmail.putExtra(Intent.EXTRA_TEXT, "Mensaje del cuerpo(contenido)");
+            intentEmail.putExtra(Intent.EXTRA_SUBJECT, "URGENTE: Animal visto");
+            intentEmail.putExtra(Intent.EXTRA_TEXT, "Hola quiero reportar un avistamiento de un animal en peligro de extinción en una zona urbana");
             startActivity(Intent.createChooser(intentEmail, "Enviar Correo con:"));
         });
 
-        //Evento compartir texto con Intent IMPLÍCITO
-        btnCompartir.setOnClickListener(view -> { // Configurar botón "Compartir"
-            Intent intentCompartir = new Intent(Intent.ACTION_SEND); // Intent implícito para compartir texto
+        btnCompartir.setOnClickListener(view -> {
+            Intent intentCompartir = new Intent(Intent.ACTION_SEND);
             intentCompartir.setType("text/plain");
-            intentCompartir.putExtra(Intent.EXTRA_TEXT, "¡Hola mi nombre es Tiffany, mira esta increíble app! Descárgala desde la Play Store 👌");
-            startActivity(Intent.createChooser(intentCompartir, "Compartir mediante:")); // Mostramos el selector de apps para compartir
+            intentCompartir.putExtra(Intent.EXTRA_TEXT, "¡Hola te comparto esta app para reportar avistamientos de animales en peligro de extincion en zonas urbanas! Descárgala desde la Play Store");
+            startActivity(Intent.createChooser(intentCompartir, "Compartir mediante:"));
         });
 
-        //Evento cerrar sesión con Intent IMPLÍCITO
         btnCerrarSesion.setOnClickListener(v -> cerrarSesion());
 
-        //Evento llamar con Intent IMPLÍCITO
-        btnLlamar.setOnClickListener(view -> { // Configurar botón "Llamar"
-            Intent intentLlamar = new Intent(Intent.ACTION_DIAL); // Intent implícito para llamar
-            startActivity(intentLlamar); // Iniciamos la Activity
+        btnLlamar.setOnClickListener(view -> {
+            String numero = "+56966820967";
+            Intent intentLlamar = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + numero));
+            if (intentLlamar.resolveActivity(getPackageManager()) != null) {
+                startActivity(intentLlamar);
+            } else {
+                Toast.makeText(this, "No hay app de teléfono disponible", Toast.LENGTH_SHORT).show();
+            }
         });
 
-        // Evento Enviar SMS con Intent IMPLÍCITO
-        btnEnviarSms.setOnClickListener(view -> { // Configurar botón "Enviar SMS"
-            String numeroSms = "";
-            String textoMensaje = "Hola, necesito ayuda con la aplicación.";
-            Intent intentSms = new Intent(Intent.ACTION_SENDTO,  Uri.parse("smsto:" + numeroSms)); // Intent implícito para enviar SMS
+        btnEnviarSms.setOnClickListener(view -> {
+            String numeroSms = "+56966820967";
+            String textoMensaje = "Hola, necesito reportar un avistamiento";
+            Intent intentSms = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + numeroSms));
             intentSms.putExtra("sms_body", textoMensaje);
             startActivity(intentSms);
         });
 
-        // Evento ir a la Ayuda con Intent EXPLÍCITO
         btnAyuda.setOnClickListener(v -> {
             Intent intentAyuda = new Intent(HomeActivity.this, AyudaActivity.class);
-            startActivity(intentAyuda); // Iniciamos la AyudaActivity
+            startActivity(intentAyuda);
         });
 
-        //Evento ir a la configuración con Intent EXPLÍCITO
         btnConfiguracion.setOnClickListener(v -> {
             Intent intentConfig = new Intent(HomeActivity.this, ConfigActivity.class);
             startActivity(intentConfig);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
-
     }
-        //Logica de linterna
+
+    // --- Métodos de la Cámara/Linterna ---
     private void inicializarCamara() {
         camara = (CameraManager) getSystemService(CAMERA_SERVICE);
         try {
-            for(String id: camara.getCameraIdList()){
+            for (String id : camara.getCameraIdList()) {
                 CameraCharacteristics cc = camara.getCameraCharacteristics(id);
                 Boolean disponibleflash = cc.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
                 Integer dato = cc.get(CameraCharacteristics.LENS_FACING);
-                if(Boolean.TRUE.equals(disponibleflash)
-                        && dato != null
-                        && dato ==CameraCharacteristics.LENS_FACING_BACK){
-                    cameraID = id; //Priorizar la camara trasera con el flash
+                if (Boolean.TRUE.equals(disponibleflash) && dato != null && dato == CameraCharacteristics.LENS_FACING_BACK) {
+                    cameraID = id;
                     break;
                 }
             }
-        }catch (CameraAccessException e){
+        } catch (CameraAccessException e) {
             Toast.makeText(this, "No se puede acceder a la camara", Toast.LENGTH_SHORT).show();
         }
         btnLinterna.setOnClickListener(v -> {
-            if(cameraID == null){
+            if (cameraID == null) {
                 Toast.makeText(this, "El dispositivo no tiene Flash disponible", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            //Datos de carga de permisos
-            boolean cargadato = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                    == PackageManager.PERMISSION_GRANTED;
-            if(cargadato){
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 alternarluz();
-            }else{ // aqui uso mi permisosCamaraLauncher
+            } else {
                 permisosCamaraLauncher.launch(Manifest.permission.CAMERA);
             }
         });
-
     }
+
     private void alternarluz() {
         try {
-            luz =! luz;
+            luz = !luz;
             camara.setTorchMode(cameraID, luz);
             btnLinterna.setText(luz ? "Apagar Linterna" : "Encender Linterna");
-        }catch (CameraAccessException e){
+        } catch (CameraAccessException e) {
             Toast.makeText(this, "Error del controlador de linterna", Toast.LENGTH_SHORT).show();
         }
     }
+
+    // --- Métodos de Ubicación y Mapa ---
+    private void verificarPermisosYAbrirMapa() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            obtenerUbicacionYAbrirMapa();
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+    }
+
+    private void obtenerUbicacionYAbrirMapa() {
+        try {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, location -> {
+                        if (location != null) {
+                            abrirGoogleMaps(location);
+                        } else {
+                            Toast.makeText(this, "No se pudo obtener la ubicación. Asegúrate de que esté activada.", Toast.LENGTH_LONG).show();
+                        }
+                    });
+        } catch (SecurityException e) {
+            Toast.makeText(this, "Error de seguridad. Vuelve a intentar.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void abrirGoogleMaps(Location location) {
+        double latitud = location.getLatitude();
+        double longitud = location.getLongitude();
+        String etiqueta = "Mi ubicación actual";
+        Uri gmmIntentUri = Uri.parse("geo:" + latitud + "," + longitud + "?q=" + latitud + "," + longitud + "(" + Uri.encode(etiqueta) + ")");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(mapIntent);
+        } else {
+            Toast.makeText(this, "Google Maps no está instalado.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    // --- Métodos del Ciclo de Vida y Otros ---
     private void cerrarSesion() {
-        new AlertDialog.Builder(this) // Mostrar diálogo de confirmación
+        new AlertDialog.Builder(this)
                 .setTitle("Cerrar Sesión")
                 .setMessage("¿Estás seguro que deseas cerrar sesión?")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton("Sí, cerrar", (dialog, which) -> {
-                    if (cameraID != null && luz) { // Apagar la linterna si está encendida
+                    if (cameraID != null && luz) {
                         try {
                             camara.setTorchMode(cameraID, false);
                             luz = false;
-                        } catch (CameraAccessException ignore) {
-                        }
+                        } catch (CameraAccessException ignored) {}
                     }
                     Intent intentLogin = new Intent(HomeActivity.this, LoginActivity.class);
                     intentLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -254,16 +309,14 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
-        if(cameraID != null && luz){ //// Si la linterna está encendida
+        if (cameraID != null && luz) {
             try {
-                camara.setTorchMode(cameraID, false); // Apaga la linterna
+                camara.setTorchMode(cameraID, false);
                 luz = false;
-                //Actualizamos el texto del botón
-                if(btnLinterna != null) btnLinterna.setText("Encender Linterna"); //Esta comprobación no es estrictamente necesaria
-            }catch (CameraAccessException ignore){}                               //btnLinterna se inicializa en onCreate,
-        }                                                                         //y onPause siempre se ejecutará después de que onCreate haya terminado
-    }                                                                             //Por lo tanto, en el ciclo de vida normal de una Activity,
-}                                                                                 //btnLinterna nunca será nulo cuando se llame a onPause.
-                                                                                  //Es decir, que se puede quitar la comprobacion de nulidad asi el codigo es mas directo jeje
+                if (btnLinterna != null) btnLinterna.setText("Encender Linterna");
+            } catch (CameraAccessException ignored) {}
+        }
+    }
+}

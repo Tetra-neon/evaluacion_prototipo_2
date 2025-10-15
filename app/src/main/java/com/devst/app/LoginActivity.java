@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.util.Patterns;
+import android.os.Handler;
+import android.os.Looper;
 
 
 import androidx.activity.EdgeToEdge;
@@ -21,13 +23,23 @@ public class LoginActivity extends AppCompatActivity {
     // (Se mantienen como variables de instancia porque se usan en onCreate() y en IntentoInicioSesion())
     private EditText edtEmail;
     private EditText edtPass;
+    private boolean isReady = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SplashScreen.installSplashScreen(this);
+        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+
+        // Llamada al `onCreate` del padre
         super.onCreate(savedInstanceState);
+
         EdgeToEdge.enable(this); //EdgeToEdge es para diseños de pantalla completa en Android, lo puedo quitar
+
+        // Establecer el layout de tu actividad
         setContentView(R.layout.activity_login);
+        splashScreen.setKeepOnScreenCondition(() -> !isReady);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            isReady = true;
+        }, 1500);
 
         // --- 2. CONECTAR VISTAS Y CONFIGURAR LISTENERS ---
         // Se conectan las vistas del XML a las variables de la clase
