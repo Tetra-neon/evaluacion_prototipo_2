@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.devst.app">
 
+    <!-- PERMISOS DE UBICACIÓN REQUERIDOS -->
+    <!-- ACCESS_FINE_LOCATION: Para obtener la ubicación precisa (GPS) -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- ACCESS_COARSE_LOCATION: Para obtener la ubicación aproximada (redes móviles/Wi-Fi). -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <!-- Permiso para la camara y tambien flash-->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature
@@ -64,5 +70,11 @@
         </provider>
 
     </application>
-
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="geo" />
+        </intent>
+        <package android:name="com.google.android.apps.maps" />
+    </queries>
 </manifest>
