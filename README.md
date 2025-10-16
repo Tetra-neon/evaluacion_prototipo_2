@@ -14,11 +14,6 @@ Aplicación Android para reportar avistamientos de fauna salvaje en peligro de e
 ![Logo](https://cdn0.ecologiaverde.com/es/posts/4/8/6/animales_en_peligro_de_extincion_en_chile_1684_600.webp)
 
 
-
-
-
-
-
 ## 📑 Tabla de Contenidos
 
 - [Descripción](#-descripción-del-proyecto)
@@ -29,6 +24,8 @@ Aplicación Android para reportar avistamientos de fauna salvaje en peligro de e
 - [Instalación](#-instalación)
 - [Uso](#-guía-de-uso)
 - [Autor](#-autor)
+
+![Image](https://github.com/user-attachments/assets/4a59d9c2-6286-4ef4-be46-1b1aaa17c086)
 
 ## 📋 Descripción del Proyecto
 
@@ -111,6 +108,7 @@ Crear un puente de comunicación entre la comunidad y los centros de rescate de 
 | EditarPerfilActivity (EditarPerfil) | UI que permite editar los datos | 
 
 ### 🔬 Pasos de Prueba
+
 ### 🌐 ACTION_VIEW - Navegación Web
   1. Abrir la aplicación e iniciar sesión
   2. En Home, ir a sección "Contacto"
@@ -127,6 +125,7 @@ Crear un puente de comunicación entre la comunidad y los centros de rescate de 
   2. Elegir app (WhatsApp, Facebook, etc.)
   3. **Resultado esperado**: Mensaje predefinido listo para compartir
 
+![Image](https://github.com/user-attachments/assets/69326a7c-6f93-482d-b6aa-a38709733066)
 ### 📞 ACTION_DIAL - Realizar Llamada
   1. Presionar botón "Llamar"
   2. **Resultado esperado**: Abre marcador con +56966820967
@@ -135,6 +134,7 @@ Crear un puente de comunicación entre la comunidad y los centros de rescate de 
  ### 💬 ACTION_SENDTO - Envío de SMS
   1. Presionar "Enviar SMS"
   2. **Resultado esperado**: App de mensajes con número y texto prellenados
+
 
  ### 📍 ACTION_VIEW - Geolocalización
   1. Presionar "Ver mi ubicación"
@@ -145,32 +145,37 @@ Crear un puente de comunicación entre la comunidad y los centros de rescate de 
   2. **Resultado esperado**: App de cámara se abre
   3. Permite tomar fotográfica
   4. Intentar de nuevo / Guardar en galería
-
+     
+![Image](https://github.com/user-attachments/assets/38dccb65-dd4c-4171-b730-1d89b28aaa21)
 ### 👤 LOGIN → HomeActivity
   1. Ingresar email: `t.baron@alumnos.santotomas.cl`
   2. Ingresar password: `123456`
   3. Presionar "Iniciar Sesión"
   4. **Resultado esperado**: Navega a HomeActivity con email visible
 
+![Image](https://github.com/user-attachments/assets/bb24751e-051b-4def-8633-23c1f81e3a0c)
  ### 💁🏼‍♂️ HOME → PerfilActivity
   1. En Home, sección "Perfil"
   2. Presionar "Ver mi Perfil"
   3. **Resultado esperado**: Se abre perfil con email del usuario
 
+![Image](https://github.com/user-attachments/assets/1ad2b28f-0ed5-4fca-966b-f08dd4776c4a)
+ ### 💁🏼‍♂️ HOME → EditarPerfilActivity
+  1. En Perfil, seleccionar "Editar Perfil"
+  2. **Resultado esperado**: Se abre formulario para rellenar el perfil con nombre, rut y email del usuario
+  3. Guardar cambios, toast con mensaje de cambios guardados con éxito.
+
+![Image](https://github.com/user-attachments/assets/05383ec1-ed02-4970-912c-202e4513319b)
  ### 🆘 HOME → AyudaActivity
   1. En Home, sección "Cuenta"
   2. Presionar "Ayuda y FAQ"
   3. **Resultado esperado**: Pantalla con preguntas frecuentes y formulario
 
-
-
-
-
-
-
-
-
-
+![Image](https://github.com/user-attachments/assets/cef313c3-7889-4fc2-9e74-82eac9d024c4)
+ ### 🆘 HOME → ConfiguracionActivity
+  1. En Home, sección "Cuenta"
+  2. Presionar "Ajustes de la Cuenta"
+  3. **Resultado esperado**: Pantalla con la configuración básicas
 
 ## 👨‍💻 Autor
 
