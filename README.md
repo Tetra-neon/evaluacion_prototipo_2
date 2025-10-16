@@ -19,11 +19,6 @@ Aplicación Android para reportar avistamientos de fauna salvaje en peligro de e
 - [Descripción](#-descripción-del-proyecto)
 - [Características](#-características-principales)
 - [Intents](#-intents-implementados)
-- [Capturas](#-capturas-de-pantalla)
-- [Tecnologías](#-tecnologías-utilizadas)
-- [Instalación](#-instalación)
-- [Uso](#-guía-de-uso)
-- [Autor](#-autor)
 
 ![Image](https://github.com/user-attachments/assets/4a59d9c2-6286-4ef4-be46-1b1aaa17c086)
 
