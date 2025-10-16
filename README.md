@@ -172,6 +172,36 @@ Crear un puente de comunicación entre la comunidad y los centros de rescate de 
   2. Presionar "Ajustes de la Cuenta"
   3. **Resultado esperado**: Pantalla con la configuración básicas
 
+## 🐾 SOS Wild - Versión 1.0.0 (Debug)
+Primera versión funcional de la aplicación de reporte de fauna salvaje.
+
+### 📋 Requisitos
+- Android 8.0 (API 26) o superior
+- 15 MB de espacio libre
+- Permisos: Cámara, Ubicación (opcionales)
+
+### 🔐 Credenciales de Prueba
+- **Email**: t.baron@alumnos.santotomas.cl
+- **Contraseña**: 123456
+
+### 📥 Instalación
+1. Descargar el APK adjunto
+2. Habilitar "Instalar apps desconocidas" en tu dispositivo
+3. Transferir a tu dispositivo Android:
+   - **Opción A**: Conecta tu celular por USB y copia el archivo
+   - **Opción B**: Descarga directamente desde el navegador del celular
+4. Instalar y abrir la app
+
+**📊 Información del APK**:
+- **Nombre**: sos-wild-v1.0.0-debug.apk
+- **Tamaño**: 15.5 MB
+- **Versión**: 1.0.0 (Debug)
+- **Min Android**: 8.0 (Oreo, API 26)
+- **Target Android**: 14 (API 34)
+- **Fecha**: 15/10/2025
+
+---
+
 ## 👨‍💻 Autor
 
 **Tiffany Baron**  
