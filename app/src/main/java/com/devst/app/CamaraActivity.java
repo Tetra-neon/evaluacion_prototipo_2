@@ -122,9 +122,9 @@ public class CamaraActivity extends AppCompatActivity {
         if (photoUri != null) outState.putString(STATE_URI, photoUri.toString());
         outState.putBoolean(STATE_LAUNCHED, hasLaunched);
     }
-    private void startCapture() {
-        if (photoUri == null) photoUri = createPhotoUri();
-        if (photoUri == null) {
+    private void startCapture() {  // Inicia el flujo de captura
+        if (photoUri == null) photoUri = createPhotoUri(); // Pre-creamos el destino en MediaStore
+        if (photoUri == null) { // Si no se pudo crear, no podremos guardar la foto
             Toast.makeText(this, "No se pudo crear destino de imagen", Toast.LENGTH_SHORT).show();
             finish();
             return;
@@ -132,15 +132,15 @@ public class CamaraActivity extends AppCompatActivity {
         hasLaunched = true;
         takePicture.launch(photoUri);
     }
-    @Nullable
-    private Uri createPhotoUri() {
+    @Nullable // Crea el registro en la galería (MediaStore) donde se guardará la foto
+    private Uri createPhotoUri() { // (se usa fecha-hora para nombre único)
         String nombre = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()) + ".jpg";
         var cv = new ContentValues();
         cv.put(MediaStore.Images.Media.DISPLAY_NAME, nombre);
         cv.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             cv.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/MiAppPruebas");
-        }
+        }// Insertamos en la colección de Imágenes externas y recibimos el Uri de destino
         return getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
     }
 }
