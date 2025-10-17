@@ -84,9 +84,9 @@ public class HomeActivity extends AppCompatActivity {
 
         // --- 1. Inicialización de Servicios y Launchers ---
         inicializarServiciosDeUbicacion();
-        inicializarVistas(); // ✅ CORRECCIÓN: Llamamos a un método para inicializar todas las vistas
+        inicializarVistas(); // Llamamos a un método para inicializar todas las vistas
         inicializarCamara();
-        configurarListeners(); // ✅ CORRECCIÓN: Llamamos a un método para configurar todos los listeners
+        configurarListeners(); //  Llamamos a un método para configurar todos los listeners
 
         // --- 2. Lógica Inicial ---
         emailUsuario = getIntent().getStringExtra("email_usuario");
@@ -103,7 +103,7 @@ public class HomeActivity extends AppCompatActivity {
     private void inicializarServiciosDeUbicacion() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        // ✅ CORRECCIÓN: Se inicializa el launcher de permisos de ubicación UNA SOLA VEZ.
+        // Se inicializa el launcher de permisos de ubicación UNA SOLA VEZ.
         requestPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
@@ -118,7 +118,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void configurarListeners() {
-        // ✅ CORRECCIÓN: Todos los listeners juntos en un solo método.
+        //Todos los listeners juntos en un solo método
         Button btnCamara = findViewById(R.id.btnCamara);
         Button btnIrPerfil = findViewById(R.id.btnIrPerfil);
         Button btnAbrirWeb = findViewById(R.id.btnAbrirWeb);
@@ -272,10 +272,15 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void abrirGoogleMaps(Location location) {
+        // Extrae coordenadas decimales de la Location
         double latitud = location.getLatitude();
         double longitud = location.getLongitude();
-        String etiqueta = "Mi ubicación actual";
-        Uri gmmIntentUri = Uri.parse("geo:" + latitud + "," + longitud + "?q=" + latitud + "," + longitud + "(" + Uri.encode(etiqueta) + ")");
+        String etiqueta = "Mi ubicación actual";// Texto que se mostrará como etiqueta del pin.
+        // Construye un URI de esquema geo: con parámetro q=lat,long(etiqueta)
+        // Esto indica a Maps que centre y ponga un marcador con esa etiqueta.
+        Uri gmmIntentUri = Uri.parse("geo:" + latitud + "," + longitud
+                + "?q=" + latitud + "," + longitud + "(" + Uri.encode(etiqueta) + ")");
+        // Crea un Intent implícito para "ver" ese contenido geográfico.
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
         if (mapIntent.resolveActivity(getPackageManager()) != null) {
